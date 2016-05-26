@@ -31,6 +31,15 @@ def _new_native_git_repository_implementation(ctx):
     ctx.symlink(ctx.attr.build_file, 'BUILD')
   else:
     ctx.file('BUILD', ctx.attr.build_file_contents)
+  if ctx.attr.workspace_file:
+    ctx.symlink(ctx.attr.workspace_file, 'WORKSPACE')
+  elif ctx.attr.workspace_file_contents:
+      ctx.file('WORKSPACE', ctx.attr.workspace_file_contents)
+  else:
+    workspace_contents = """
+workspace(name = "{workspace_name}")
+""".format(workspace_name=ctx.name)
+    ctx.file('WORKSPACE', workspace_contents)
 
 def _native_git_repository_implementation(ctx):
   _clone_or_update(ctx)
@@ -48,6 +57,8 @@ new_native_git_repository=repository_rule(
   attrs=_common_attrs + {
     "build_file": attr.label(),
     "build_file_contents": attr.string(),
+    "workspace_file": attr.label(),
+    "workspace_file_contents": attr.string(),
   }
 )
 
