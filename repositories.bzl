@@ -18,7 +18,7 @@ git fetch
 git reset --hard {ref}
 git clean -xdf
   """.format(
-    dir=ctx.path("."),
+    dir=ctx.path(""),
     remote=ctx.attr.remote,
     ref=ref,
   )])
